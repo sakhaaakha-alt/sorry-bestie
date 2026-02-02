@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sorry Bestie 🥺💙</title>
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #c9d6ff, #e2e2e2);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 36px;
+      color: #333;
+    }
+
+    h2 {
+      color: #555;
+    }
+
+    .buttons {
+      margin-top: 35px;
+      position: relative;
+      height: 80px;
+    }
+
+    button {
+      padding: 14px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+    }
+
+    #yesBtn {
+      background-color: #6a11cb;
+      color: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    #noBtn {
+      background-color: #ff4b5c;
+      color: white;
+      position: absolute;
+      left: 120px;
+      top: 0;
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 28px;
+      animation: pop 3s ease-out forwards;
+    }
+
+    @keyframes pop {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-250px) scale(1.5);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="content">
+    <h1>Bestieeee 🥺👉👈</h1>
+    <h2>
+      I messed up. I know it.  
+      Please don’t stay mad 😭  
+      <br><br>
+      Will you forgive your *favorite* person?
+    </h2>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes, obviously 🙄💙</button>
+      <button id="noBtn">No 😤</button>
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+
+    noBtn.addEventListener("mouseover", () => {
+      const x = Math.random() * (window.innerWidth - 120);
+      const y = Math.random() * (window.innerHeight - 80);
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    });
+
+    yesBtn.addEventListener("click", () => {
+      document.getElementById("content").innerHTML = `
+        <h1>YAYYY 🥳💖</h1>
+        <h2>
+          Knew it 😌  
+          Best friends forever ♾️  
+          <br><br>
+          Ice cream / chai on me 🍦☕
+        </h2>
+      `;
+
+      for (let i = 0; i < 60; i++) {
+        createEmoji();
+      }
+    });
+
+    function createEmoji() {
+      const emojis = ["🎉", "🎊", "🥳", "💖", "✨", "💙", "🫶"];
+      const emoji = document.createElement("div");
+      emoji.classList.add("emoji");
+      emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+
+      emoji.style.left = Math.random() * window.innerWidth + "px";
+      emoji.style.top = window.innerHeight + "px";
+
+      document.body.appendChild(emoji);
+
+      setTimeout(() => {
+        emoji.remove();
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
