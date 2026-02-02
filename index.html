@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sorry Bestie 🥺💙</title>
 
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -18,6 +19,11 @@
       font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       overflow: hidden;
       text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    body.pop {
+      transform: scale(1.03);
     }
 
     .container {
@@ -38,7 +44,7 @@
     .buttons {
       margin-top: 30px;
       position: relative;
-      height: 160px;
+      height: 170px;
     }
 
     button {
@@ -53,6 +59,7 @@
     #yesBtn {
       background: #6a11cb;
       color: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
     #noBtn {
@@ -64,9 +71,23 @@
       transform: translateX(-50%);
     }
 
+    /* Shake animation */
+    @keyframes shake {
+      0% { transform: translateX(-50%) translateX(0); }
+      25% { transform: translateX(-50%) translateX(-5px); }
+      50% { transform: translateX(-50%) translateX(5px); }
+      75% { transform: translateX(-50%) translateX(-5px); }
+      100% { transform: translateX(-50%) translateX(0); }
+    }
+
+    .shake {
+      animation: shake 0.3s;
+    }
+
+    /* Emojis */
     .emoji {
       position: absolute;
-      font-size: 30px;
+      font-size: 32px;
       animation: floatUp 3s ease-out forwards;
       pointer-events: none;
     }
@@ -77,13 +98,18 @@
         opacity: 1;
       }
       to {
-        transform: translateY(-300px) scale(1.6);
+        transform: translateY(-320px) scale(1.6);
         opacity: 0;
       }
     }
   </style>
 </head>
 <body>
+
+  <!-- Sounds -->
+  <audio id="tapSound">
+    <source src="tap.mp3" type="audio/mpeg">
+  </audio>
 
   <audio id="bgMusic" loop>
     <source src="celebration.mp3" type="audio/mpeg">
@@ -92,7 +118,8 @@
   <div class="container" id="content">
     <h1>Bestieeee 🥺👉👈</h1>
     <h2>
-      I messed up.  
+      I messed up. I know.  
+      <br>
       Please don’t stay mad 😭  
       <br><br>
       Will you forgive me?
@@ -107,28 +134,37 @@
   <script>
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
+    const tapSound = document.getElementById("tapSound");
     const music = document.getElementById("bgMusic");
 
-    function vibrate(pattern = 50) {
-      if (navigator.vibrate) {
-        navigator.vibrate(pattern);
-      }
+    function playTap() {
+      tapSound.currentTime = 0;
+      tapSound.play().catch(() => {});
     }
 
     function escapeNoButton() {
-      vibrate([30, 20, 30]);
+      playTap();
+
+      noBtn.classList.add("shake");
+      setTimeout(() => noBtn.classList.remove("shake"), 300);
+
       const maxX = window.innerWidth - noBtn.offsetWidth;
       const maxY = window.innerHeight - noBtn.offsetHeight;
+
       noBtn.style.left = Math.random() * maxX + "px";
       noBtn.style.top = Math.random() * maxY + "px";
     }
 
-    ["touchstart", "touchmove", "mouseenter", "click"].forEach(evt => {
+    ["touchstart", "mouseenter", "click"].forEach(evt => {
       noBtn.addEventListener(evt, escapeNoButton);
     });
 
     yesBtn.addEventListener("click", () => {
-      // 1️⃣ UPDATE UI FIRST (always works)
+      playTap();
+
+      document.body.classList.add("pop");
+      setTimeout(() => document.body.classList.remove("pop"), 200);
+
       document.getElementById("content").innerHTML = `
         <h1>YAYYYY 🥳💙</h1>
         <h2>
@@ -140,15 +176,10 @@
         </h2>
       `;
 
-      // 2️⃣ EMOJIS
-      for (let i = 0; i < 60; i++) {
+      for (let i = 0; i < 80; i++) {
         createEmoji();
       }
 
-      // 3️⃣ VIBRATION
-      vibrate([100, 50, 100]);
-
-      // 4️⃣ MUSIC (delayed = mobile-safe)
       setTimeout(() => {
         music.play().catch(() => {});
       }, 300);
