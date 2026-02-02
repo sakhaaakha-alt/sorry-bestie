@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
   <title>Sorry Bestie 🥺💙</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     body {
       height: 100vh;
@@ -11,88 +17,95 @@
       justify-content: center;
       align-items: center;
       background: linear-gradient(135deg, #c9d6ff, #e2e2e2);
-      font-family: "Comic Sans MS", cursive, sans-serif;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       overflow: hidden;
+      text-align: center;
     }
 
     .container {
-      text-align: center;
       padding: 20px;
+      max-width: 90%;
     }
 
     h1 {
-      font-size: 36px;
-      color: #333;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
     }
 
     h2 {
+      font-size: 1.15rem;
+      font-weight: 400;
       color: #555;
     }
 
     .buttons {
-      margin-top: 35px;
+      margin-top: 30px;
       position: relative;
-      height: 80px;
+      height: 160px;
     }
 
     button {
-      padding: 14px 30px;
-      font-size: 18px;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
       border: none;
-      border-radius: 25px;
+      border-radius: 30px;
       cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.1);
     }
 
     #yesBtn {
-      background-color: #6a11cb;
+      background: #6a11cb;
       color: white;
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
     #noBtn {
-      background-color: #ff4b5c;
+      background: #ff4b5c;
       color: white;
       position: absolute;
-      left: 120px;
-      top: 0;
+      left: 50%;
+      top: 70px;
+      transform: translateX(-50%);
     }
 
     .emoji {
       position: absolute;
-      font-size: 28px;
-      animation: pop 3s ease-out forwards;
+      font-size: 30px;
+      animation: floatUp 3s ease-out forwards;
+      pointer-events: none;
     }
 
-    @keyframes pop {
-      0% {
-        opacity: 1;
+    @keyframes floatUp {
+      from {
         transform: translateY(0) scale(1);
+        opacity: 1;
       }
-      100% {
+      to {
+        transform: translateY(-300px) scale(1.6);
         opacity: 0;
-        transform: translateY(-250px) scale(1.5);
       }
     }
   </style>
 </head>
 <body>
 
+  <!-- Background music (starts on YES click) -->
+  <audio id="bgMusic" loop>
+    <source src="celebration.mp3" type="audio/mpeg">
+  </audio>
+
   <div class="container" id="content">
     <h1>Bestieeee 🥺👉👈</h1>
     <h2>
-      I messed up. I know it.  
+      I messed up. I know.  
+      <br>
       Please don’t stay mad 😭  
       <br><br>
-      Will you forgive your *favorite* person?
+      Will you forgive me?
     </h2>
 
     <div class="buttons">
-      <button id="yesBtn">Yes, obviously 🙄💙</button>
+      <button id="yesBtn">Yes 💙</button>
       <button id="noBtn">No 😤</button>
     </div>
   </div>
@@ -100,19 +113,45 @@
   <script>
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
+    const music = document.getElementById("bgMusic");
 
-    noBtn.addEventListener("mouseover", () => {
-      const x = Math.random() * (window.innerWidth - 120);
-      const y = Math.random() * (window.innerHeight - 80);
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
+    function vibrate(pattern = 50) {
+      if (navigator.vibrate) {
+        navigator.vibrate(pattern);
+      }
+    }
+
+    function escapeNoButton() {
+      vibrate([30, 20, 30]);
+
+      const padding = 20;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top = Math.random() * maxY + "px";
+    }
+
+    // NO is impossible forever 😈
+    ["touchstart", "touchmove", "mouseenter", "click"].forEach(event => {
+      noBtn.addEventListener(event, escapeNoButton);
     });
 
-    yesBtn.addEventListener("click", () => {
+    yesBtn.addEventListener("click", async () => {
+      vibrate([100, 50, 100]);
+
+      // Start music (mobile-safe)
+      try {
+        await music.play();
+      } catch (e) {
+        console.log("Music blocked until interaction");
+      }
+
       document.getElementById("content").innerHTML = `
-        <h1>YAYYY 🥳💖</h1>
+        <h1>YAYYYY 🥳💙</h1>
         <h2>
           Knew it 😌  
+          <br><br>
           Best friends forever ♾️  
           <br><br>
           Ice cream / chai on me 🍦☕
@@ -125,19 +164,14 @@
     });
 
     function createEmoji() {
-      const emojis = ["🎉", "🎊", "🥳", "💖", "✨", "💙", "🫶"];
+      const emojis = ["🎉","🎊","🥳","💖","💙","✨","🫶"];
       const emoji = document.createElement("div");
-      emoji.classList.add("emoji");
+      emoji.className = "emoji";
       emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-
       emoji.style.left = Math.random() * window.innerWidth + "px";
       emoji.style.top = window.innerHeight + "px";
-
       document.body.appendChild(emoji);
-
-      setTimeout(() => {
-        emoji.remove();
-      }, 3000);
+      setTimeout(() => emoji.remove(), 3000);
     }
   </script>
 
